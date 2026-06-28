@@ -1,45 +1,608 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Password Security Assessment Tool</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shibnath Hansda| HansdaTechs</title>
+    <style>
+        :root {
+            --bg: #030509;
+            --surface: rgba(11, 16, 29, 0.75);
+            --accent: #00f0ff;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --border: rgba(255, 255, 255, 0.05);
+            
+            --danger: #ff4a4a;
+            --warning: #ffb100;
+            --success: #00e676;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas background for Neural Particles */
+        #neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Smooth Premium Popup Effect for the entire card */
+        .app-shell {
+            width: 100%;
+            max-width: 580px;
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 48px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.03);
+            z-index: 2;
+            
+            /* Entry Animation */
+            animation: popup 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: scale(0.92) translateY(10px);
+        }
+
+        @keyframes popup {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 4px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent), 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        input {
+            flex: 1;
+            padding: 14px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-action {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-action:hover {
+            color: var(--text-primary);
+        }
+
+        .meter-container {
+            margin-top: 28px;
+        }
+
+        .track {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        #bar {
+            height: 100%;
+            width: 0%;
+            background: var(--text-muted);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        #status-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .metric-group h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .metric-group p {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .console-panel {
+            margin-top: 36px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.01);
+            transition: all 0.3s;
+        }
+
+        .console-panel h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .console-panel ul {
+            list-style: none;
+        }
+
+        .console-panel li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: listPopup 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes listPopup {
+            from { opacity: 0; transform: translateX(-5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .console-panel li::before {
+            content: "→";
+            color: var(--text-muted);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 36px;
+        }
+
+        .btn-main {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-solid {
+            background: var(--text-primary);
+            color: var(--bg);
+            border: none;
+        }
+
+        .btn-solid:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-solid:active { transform: translateY(0); }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline:active { transform: translateY(0); }
+
+        /* Identity Core (Ultra Minimalist Profile Popup) */
+        .identity-core {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .id-meta h2 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .id-meta p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .id-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .id-links a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s, transform 0.2s;
+            display: inline-block;
+        }
+
+        .id-links a:hover {
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.08);
+            letter-spacing: 0.05em;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
+<canvas id="neural-canvas"></canvas>
 
-<h1>🔐 Password Security Assessment Tool</h1>
+<div class="app-shell">
 
-<div class="input-box">
-    <input type="password" id="password" placeholder="Enter Password">
-    <button id="toggleBtn">👁</button>
+    <header>
+        <h1>Entropy Engine</h1>
+        <p>Real-time cryptographic key analysis matrix.</p>
+    </header>
+
+    <div class="input-wrapper">
+        <input type="password" id="password" placeholder="Input security string...">
+        <button id="toggleBtn" class="btn-action">Show</button>
+    </div>
+
+    <div class="meter-container">
+        <div class="track">
+            <div id="bar"></div>
+        </div>
+        <div class="status-row">
+            <div id="status-label">Standby</div>
+        </div>
+    </div>
+
+    <div class="metrics">
+        <div class="metric-group">
+            <h3>Bits of Entropy</h3>
+            <p id="entropy">0.00</p>
+        </div>
+        <div class="metric-group">
+            <h3>Time To Crack</h3>
+            <p id="crackTime">Instant</p>
+        </div>
+    </div>
+
+    <div class="console-panel">
+        <h4>System Matrix Recommendations</h4>
+        <ul id="tips">
+            <li style="color: var(--text-muted);">Awaiting payload data...</li>
+        </ul>
+    </div>
+
+    <div class="control-buttons">
+        <button id="generateBtn" class="btn-main btn-solid">Generate Key</button>
+        <button id="copyBtn" class="btn-main btn-outline">Copy</button>
+    </div>
+
+    <div class="identity-core">
+        <div class="id-meta">
+            <h2>Shibnath Hansda</h2>
+            <p>Founder, HansdaTechs</p>
+        </div>
+        <div class="id-links">
+            <a href="https://github.com/Hero24-x" target="_blank">GitHub</a>
+            <a href="https://instagram.com/ethicalhansda" target="_blank">Instagram</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 HANSDATECHS &bull; ALL RIGHTS RESERVED
+    </footer>
+
 </div>
 
-<div class="meter">
-    <div id="meter-fill"></div>
-</div>
+<script>
+    // --- Neural Particles Background Engine ---
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
 
-<h3 id="strength">Waiting for input...</h3>
+    let particles = [];
+    const maxParticles = 65; 
+    const connectionDist = 110;
 
-<div class="stats">
-    <p><strong>Entropy:</strong> <span id="entropy">0</span> bits</p>
-    <p><strong>Estimated Crack Time:</strong> <span id="crack">Instant</span></p>
-</div>
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-<div class="recommendations">
-    <h3>Security Recommendations</h3>
-    <ul id="tips"></ul>
-</div>
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.radius = Math.random() * 1.5 + 1;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
 
-<div class="generator">
-    <button id="generateBtn">Generate Secure Password</button>
-    <button id="copyBtn">Copy Password</button>
-</div>
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(148, 163, 184, 0.25)';
+            ctx.fill();
+        }
+    }
 
-</div>
+    for (let i = 0; i < maxParticles; i++) {
+        particles.push(new Particle());
+    }
 
-<script src="script.js"></script>
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < connectionDist) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 240, 255, ${0.12 * (1 - dist / connectionDist)})`;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+
+    // --- Core Password Engine Logic ---
+    const passwordInput = document.getElementById("password");
+    const bar = document.getElementById("bar");
+    const statusLabel = document.getElementById("status-label");
+    const entropyText = document.getElementById("entropy");
+    const crackTime = document.getElementById("crackTime");
+    const tips = document.getElementById("tips");
+
+    const toggleBtn = document.getElementById("toggleBtn");
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+
+    const commonPasswords = ["123456", "password", "qwerty", "admin", "welcome", "password123"];
+
+    passwordInput.addEventListener("input", analyze);
+
+    toggleBtn.onclick = () => {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleBtn.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            toggleBtn.textContent = "Show";
+        }
+    };
+
+    generateBtn.onclick = () => {
+        passwordInput.value = generatePassword(16);
+        analyze();
+    };
+
+    copyBtn.onclick = () => {
+        if(!passwordInput.value) return;
+        navigator.clipboard.writeText(passwordInput.value);
+        
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copied ✓";
+        copyBtn.style.color = "var(--success)";
+        
+        setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.style.color = "var(--text-primary)";
+        }, 1500);
+    };
+
+    function analyze() {
+        const password = passwordInput.value;
+
+        if (!password) {
+            bar.style.width = "0%";
+            statusLabel.innerText = "Standby";
+            statusLabel.style.color = "var(--text-muted)";
+            entropyText.innerText = "0.00";
+            crackTime.innerText = "Instant";
+            tips.innerHTML = '<li style="color: var(--text-muted);">Awaiting payload data...</li>';
+            return;
+        }
+
+        let score = 0;
+        let messages = [];
+
+        if (password.length >= 12) score += 20; else messages.push("Length short of 12 character baseline");
+        if (/[A-Z]/.test(password)) score += 20; else messages.push("Missing upper case registers");
+        if (/[a-z]/.test(password)) score += 20; else messages.push("Missing lower case registers");
+        if (/[0-9]/.test(password)) score += 20; else messages.push("Missing numeric arguments");
+        if (/[^A-Za-z0-9]/.test(password)) score += 20; else messages.push("Missing special notations");
+
+        if (commonPasswords.includes(password.toLowerCase())) {
+            score = 10;
+            messages = ["Critical: Detected in global common password list"];
+        }
+
+        updateMeter(score);
+
+        const entropy = calculateEntropy(password);
+        entropyText.innerText = entropy + " bits";
+        crackTime.innerText = estimate(entropy);
+
+        tips.innerHTML = "";
+        if (messages.length === 0) {
+            tips.innerHTML = `<li style="color: var(--success); animation-delay: 0s;">All cryptographic baselines secure.</li>`;
+        } else {
+            messages.forEach((msg, index) => {
+                const li = document.createElement("li");
+                li.textContent = msg;
+                li.style.animationDelay = `${index * 0.04}s`;
+                tips.appendChild(li);
+            });
+        }
+    }
+
+    function updateMeter(score) {
+        bar.style.width = score + "%";
+
+        if (score < 40) {
+            bar.style.backgroundColor = "var(--danger)";
+            statusLabel.innerText = "Compromised / Weak";
+            statusLabel.style.color = "var(--danger)";
+        } else if (score < 70) {
+            bar.style.backgroundColor = "var(--warning)";
+            statusLabel.innerText = "Sub-Optimal / Moderate";
+            statusLabel.style.color = "var(--warning)";
+        } else if (score < 90) {
+            bar.style.backgroundColor = "var(--success)";
+            statusLabel.innerText = "Compliant / Strong";
+            statusLabel.style.color = "var(--success)";
+        } else {
+            bar.style.backgroundColor = "var(--accent)";
+            statusLabel.innerText = "Optimized / High Security";
+            statusLabel.style.color = "var(--accent)";
+        }
+    }
+
+    function calculateEntropy(password) {
+        let charset = 0;
+        if (/[a-z]/.test(password)) charset += 26;
+        if (/[A-Z]/.test(password)) charset += 26;
+        if (/[0-9]/.test(password)) charset += 10;
+        if (/[^A-Za-z0-9]/.test(password)) charset += 32;
+
+        if (charset === 0) return 0;
+        return Math.round(password.length * Math.log2(charset));
+    }
+
+    function estimate(entropy) {
+        if (entropy === 0) return "Instant";
+        if (entropy < 28) return "Seconds";
+        if (entropy < 36) return "Hours";
+        if (entropy < 60) return "Years";
+        if (entropy < 80) return "K-Years";
+        return "M-Years";
+    }
+
+    function generatePassword(length) {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+</script>
 </body>
 </html>
