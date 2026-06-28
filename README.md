@@ -2,15 +2,25 @@
 
 A cybersecurity-focused web application that evaluates password strength in real time using entropy analysis, complexity validation, security scoring, and password assessment techniques. The tool helps users create stronger passwords by providing actionable recommendations and visual security insights based on industry-standard best practices.
 
-![Status](https://img.shields.io/badge/Status-Active-success)
+![Status](https://img.shields.io/badge/Status-Live-success)
 ![Version](https://img.shields.io/badge/Version-1.0-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
+## 🌍 Live Demo
+
+🚀 **Live Website**
+
+https://secure-credential-tool.netlify.app/
+
+Experience real-time password security analysis directly in your browser without any installation.
+
+---
+
 ## 🌟 Overview
 
-Password Security Assessment Tool is a browser-based cybersecurity project designed to analyze password strength and educate users about secure credential practices.
+Password Security Assessment Tool is a browser-based cybersecurity project designed to analyze password strength and promote secure credential practices.
 
 The application performs real-time password evaluation by examining multiple security factors such as password length, character diversity, entropy, and complexity. Users receive immediate feedback and recommendations to improve password resilience against common attack methods.
 
@@ -22,8 +32,8 @@ The application performs real-time password evaluation by examining multiple sec
 
 * Instant password strength evaluation
 * Dynamic security score calculation
-* Live visual feedback
 * Interactive strength meter
+* Live password assessment
 
 ### 🛡️ Advanced Security Features
 
@@ -31,8 +41,8 @@ The application performs real-time password evaluation by examining multiple sec
 * Character Diversity Analysis
 * Common Password Detection
 * Complexity-Based Scoring
-* Password Security Assessment
 * Security Recommendation Engine
+* Secure Password Generation
 
 ### 📊 Strength Classification
 
@@ -72,7 +82,7 @@ The application evaluates password security using multiple parameters:
 * Entropy-Based Strength Evaluation
 * Complexity Scoring Algorithm
 
-These checks help estimate password resilience against common attack techniques such as brute-force attacks and weak credential usage.
+These checks help estimate password resilience against common attack techniques and weak credential usage.
 
 ---
 
@@ -108,7 +118,7 @@ Run the application:
 Open index.html in your browser
 ```
 
-No external dependencies or frameworks are required.
+No external frameworks or dependencies are required.
 
 ---
 
@@ -125,12 +135,12 @@ Password-strength-checker/
 
 ### File Description
 
-| File       | Description                         |
-| ---------- | ----------------------------------- |
-| index.html | Main user interface                 |
-| style.css  | Styling and responsive design       |
-| script.js  | Password analysis and scoring logic |
-| README.md  | Project documentation               |
+| File       | Description                                |
+| ---------- | ------------------------------------------ |
+| index.html | Main application interface                 |
+| style.css  | Styling, animations, and responsive design |
+| script.js  | Password analysis and scoring logic        |
+| README.md  | Project documentation                      |
 
 ---
 
@@ -149,6 +159,8 @@ Password-strength-checker/
 ✔ Password Complexity Assessment
 
 ✔ Entropy-Based Evaluation
+
+✔ Common Password Detection
 
 ✔ Security Strength Classification
 
@@ -196,15 +208,31 @@ Through this project, the following concepts were explored:
 
 ---
 
+## 📸 Preview
+
+Visit the live project:
+
+🔗 https://secure-credential-tool.netlify.app/
+
+---
+
 ## 👨‍💻 Author
 
-**Shibnath Hansda (Hero)**
+### Shibnath Hansda (Hero)
 
-Cybersecurity Enthusiast | Front-End Developer | Founder of HansdaTechs
+Cybersecurity Enthusiast • Front-End Developer • Founder of HansdaTechs
 
-### GitHub
+### 🌐 Live Demo
+
+https://secure-credential-tool.netlify.app/
+
+### 🐙 GitHub
 
 https://github.com/Hero24-x
+
+### 📷 Instagram
+
+https://instagram.com/ethicalhansda
 
 ---
 
@@ -219,23 +247,23 @@ If you found this project useful:
 
 ---
 
+## 🚀 Future Enhancements
+
+Planned improvements include:
+
+* Password Breach Detection Integration
+* Advanced Entropy Visualization
+* Password Security Reports
+* Dark / Light Theme Support
+* Multi-Language Support
+* Enhanced Security Analytics
+
+---
+
 ## 📜 License
 
 This project is licensed under the MIT License.
 
 ---
 
-## 🚀 Future Enhancements
-
-Planned improvements include:
-
-* Password Generator
-* Password Entropy Visualization
-* Dark / Light Theme Support
-* Password Breach Detection Integration
-* Advanced Security Analytics
-* Multi-Language Support
-
----
-
-### "Strong passwords remain one of the most effective defenses against unauthorized access."
+### 🛡️ "Strong passwords remain one of the most effective defenses against unauthorized access."
