@@ -3,29 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Password Strength Checker</title>
+<title>Password Security Assessment Tool</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <h1>🔐 Password Strength Checker</h1>
 
+<h1>🔐 Password Security Assessment Tool</h1>
+
+<div class="input-box">
     <input type="password" id="password" placeholder="Enter Password">
+    <button id="toggleBtn">👁</button>
+</div>
 
-    <div class="strength-bar">
-        <div id="strength-fill"></div>
-    </div>
+<div class="meter">
+    <div id="meter-fill"></div>
+</div>
 
-    <p id="strength-text">Enter a password</p>
+<h3 id="strength">Waiting for input...</h3>
 
-    <ul id="requirements">
-        <li id="length">❌ Minimum 8 Characters</li>
-        <li id="upper">❌ Uppercase Letter</li>
-        <li id="lower">❌ Lowercase Letter</li>
-        <li id="number">❌ Number</li>
-        <li id="special">❌ Special Character</li>
-    </ul>
+<div class="stats">
+    <p><strong>Entropy:</strong> <span id="entropy">0</span> bits</p>
+    <p><strong>Estimated Crack Time:</strong> <span id="crack">Instant</span></p>
+</div>
+
+<div class="recommendations">
+    <h3>Security Recommendations</h3>
+    <ul id="tips"></ul>
+</div>
+
+<div class="generator">
+    <button id="generateBtn">Generate Secure Password</button>
+    <button id="copyBtn">Copy Password</button>
+</div>
+
 </div>
 
 <script src="script.js"></script>
