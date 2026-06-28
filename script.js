@@ -1,60 +1,167 @@
-const password = document.getElementById("password");
+const passwordInput = document.getElementById("password");
+const meterFill = document.getElementById("meter-fill");
+const strengthText = document.getElementById("strength");
+const entropyText = document.getElementById("entropy");
+const crackText = document.getElementById("crack");
+const tipsList = document.getElementById("tips");
 
-const strengthFill = document.getElementById("strength-fill");
-const strengthText = document.getElementById("strength-text");
+const toggleBtn = document.getElementById("toggleBtn");
+const generateBtn = document.getElementById("generateBtn");
+const copyBtn = document.getElementById("copyBtn");
 
-password.addEventListener("input", () => {
+const commonPasswords = [
+"123456",
+"password",
+"qwerty",
+"admin",
+"welcome",
+"password123"
+];
 
-    const value = password.value;
+passwordInput.addEventListener("input", analyzePassword);
 
-    let score = 0;
-
-    const hasLength = value.length >= 8;
-    const hasUpper = /[A-Z]/.test(value);
-    const hasLower = /[a-z]/.test(value);
-    const hasNumber = /[0-9]/.test(value);
-    const hasSpecial = /[^A-Za-z0-9]/.test(value);
-
-    update("length", hasLength);
-    update("upper", hasUpper);
-    update("lower", hasLower);
-    update("number", hasNumber);
-    update("special", hasSpecial);
-
-    if(hasLength) score++;
-    if(hasUpper) score++;
-    if(hasLower) score++;
-    if(hasNumber) score++;
-    if(hasSpecial) score++;
-
-    const percent = score * 20;
-    strengthFill.style.width = percent + "%";
-
-    if(score <= 2){
-        strengthFill.style.background = "red";
-        strengthText.textContent = "Weak Password";
-    }
-    else if(score === 3){
-        strengthFill.style.background = "orange";
-        strengthText.textContent = "Moderate Password";
-    }
-    else if(score === 4){
-        strengthFill.style.background = "yellow";
-        strengthText.textContent = "Strong Password";
-    }
-    else{
-        strengthFill.style.background = "lime";
-        strengthText.textContent = "Very Strong Password";
-    }
-
+toggleBtn.addEventListener("click",()=>{
+passwordInput.type =
+passwordInput.type==="password" ? "text" : "password";
 });
 
-function update(id,status){
-    const item = document.getElementById(id);
+generateBtn.addEventListener("click",()=>{
+passwordInput.value = generatePassword(16);
+analyzePassword();
+});
 
-    if(status){
-        item.innerHTML = "✅ " + item.textContent.substring(2);
-    }else{
-        item.innerHTML = "❌ " + item.textContent.substring(2);
-    }
+copyBtn.addEventListener("click",()=>{
+navigator.clipboard.writeText(passwordInput.value);
+alert("Password copied!");
+});
+
+function analyzePassword(){
+
+const password = passwordInput.value;
+
+let score = 0;
+let tips = [];
+
+if(password.length >= 12){
+score += 20;
+}else{
+tips.push("Use at least 12 characters.");
+}
+
+if(/[A-Z]/.test(password)){
+score += 20;
+}else{
+tips.push("Add uppercase letters.");
+}
+
+if(/[a-z]/.test(password)){
+score += 20;
+}else{
+tips.push("Add lowercase letters.");
+}
+
+if(/[0-9]/.test(password)){
+score += 20;
+}else{
+tips.push("Include numbers.");
+}
+
+if(/[^A-Za-z0-9]/.test(password)){
+score += 20;
+}else{
+tips.push("Include special characters.");
+}
+
+if(commonPasswords.includes(password.toLowerCase())){
+score = 10;
+tips.push("Common password detected.");
+}
+
+updateMeter(score);
+
+const entropy = calculateEntropy(password);
+entropyText.textContent = entropy;
+
+crackText.textContent =
+estimateCrackTime(entropy);
+
+tipsList.innerHTML = "";
+
+tips.forEach(t=>{
+const li = document.createElement("li");
+li.textContent = t;
+tipsList.appendChild(li);
+});
+}
+
+function updateMeter(score){
+
+meterFill.style.width = score + "%";
+
+if(score < 40){
+meterFill.style.background = "#ef4444";
+strengthText.textContent = "Weak";
+}
+else if(score < 70){
+meterFill.style.background = "#f59e0b";
+strengthText.textContent = "Moderate";
+}
+else if(score < 90){
+meterFill.style.background = "#22c55e";
+strengthText.textContent = "Strong";
+}
+else{
+meterFill.style.background = "#00ffff";
+strengthText.textContent = "Very Strong";
+}
+}
+
+function calculateEntropy(password){
+
+let charset = 0;
+
+if(/[a-z]/.test(password)) charset += 26;
+if(/[A-Z]/.test(password)) charset += 26;
+if(/[0-9]/.test(password)) charset += 10;
+if(/[^A-Za-z0-9]/.test(password)) charset += 32;
+
+if(charset === 0) return 0;
+
+return Math.round(
+password.length *
+Math.log2(charset)
+);
+}
+
+function estimateCrackTime(entropy){
+
+if(entropy < 28)
+return "Instant";
+
+if(entropy < 36)
+return "Few Hours";
+
+if(entropy < 60)
+return "Several Years";
+
+if(entropy < 80)
+return "Thousands of Years";
+
+return "Millions of Years";
+}
+
+function generatePassword(length){
+
+const chars =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+let result = "";
+
+for(let i=0;i<length;i++){
+result += chars.charAt(
+Math.floor(Math.random()*chars.length)
+);
+}
+
+return result;
 }
